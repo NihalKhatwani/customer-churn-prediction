@@ -119,7 +119,7 @@ customer-churn-prediction/
 ## 🚀 Quickstart
 
 ```bash
-git clone <your-repo-url> && cd customer-churn-prediction
+git clone https://github.com/NihalKhatwani/customer-churn-prediction.git && cd customer-churn-prediction
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```

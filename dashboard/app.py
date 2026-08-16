@@ -221,5 +221,5 @@ with tab_performance:
 st.divider()
 st.caption(
     "Built with scikit-learn, XGBoost, imbalanced-learn (SMOTE), FastAPI, and Streamlit. "
-    "Source: github.com/<your-username>/customer-churn-prediction"
+    "Source: github.com/NihalKhatwani/customer-churn-prediction"
 )

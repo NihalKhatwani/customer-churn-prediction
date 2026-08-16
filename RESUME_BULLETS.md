@@ -1,7 +1,7 @@
 # Resume Bullet Points — Customer Churn Prediction
 
 Copy the section below into your resume's **Projects** section. Pick 3-4 bullets (don't use all
-of them — recruiters skim). Swap `<your-repo-url>` for your actual GitHub link. Every bullet is
+of them — recruiters skim). Every bullet is
 built from the real, reproducible numbers in this repo (`reports/metrics.json`,
 `reports/statistical_tests.json`, `reports/sql_insights.md`) — verify them against your own run
 before publishing so you can defend every number in an interview.
@@ -11,7 +11,7 @@ before publishing so you can defend every number in an interview.
 ## Project header (for your resume)
 
 **Customer Churn Prediction — End-to-End ML System** | Python, scikit-learn, XGBoost, FastAPI, Docker
-`github.com/<your-username>/customer-churn-prediction` — [live demo link if deployed]
+`github.com/NihalKhatwani/customer-churn-prediction` — [live demo link if deployed]
 
 ---
 
