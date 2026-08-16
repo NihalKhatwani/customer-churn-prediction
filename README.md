@@ -4,17 +4,19 @@
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A machine learning pipeline that predicts which telecom customers are likely to cancel their
-service, built end to end: data cleaning, exploratory analysis, feature engineering, model
-selection, and deployment behind a REST API and a dashboard.
+This project predicts which telecom customers are likely to cancel their service (churn).
+It uses real customer data to train a machine learning model, then makes that model available
+through a web API and a simple dashboard.
 
-Telecom churn is a classic retention problem — losing a customer costs a lot more than keeping
-one, so the goal here is to rank customers by churn risk before they leave, and to back that up
-with an explanation of *why* (which segments are at risk, and how much revenue that represents).
+The idea: it costs a company much more to win a new customer than to keep an existing one. If you
+can flag risky customers early, a retention team can reach out before they leave.
 
-## Results
+## What the model does
 
-Held-out test set:
+Using a real dataset of 7,000+ telecom customers, the model looks at things like contract type,
+monthly bill, and which services a customer has, and predicts how likely they are to leave.
+
+Test results:
 
 | Metric | Score |
 |---|---|
@@ -24,15 +26,14 @@ Held-out test set:
 | Recall (churn) | 66.4% |
 | F1 (churn) | 0.629 |
 
-XGBoost was the best of three models compared (Logistic Regression, Random Forest, XGBoost),
-each tuned with 5-fold cross-validated GridSearchCV. Full comparison in
+Three models were compared (Logistic Regression, Random Forest, and XGBoost), each tuned to find
+its best settings. XGBoost performed best. Full comparison is in
 [reports/model_comparison.csv](reports/model_comparison.csv).
 
-One of the clearer findings: month-to-month customers on fiber internet who pay by electronic
-check churn at about 54%, versus single digits for two-year contract customers on automatic
-payment. Confirmed with chi-square testing (p < 0.001), not just eyeballing a chart — see
-[reports/sql_insights.md](reports/sql_insights.md) and
-[reports/statistical_tests.json](reports/statistical_tests.json).
+One clear pattern in the data: customers on month to month contracts, with fiber internet, who
+pay by electronic check, cancel about 54% of the time. Customers on two year contracts with
+automatic payment cancel far less often. This was checked with a statistical significance test,
+not just a chart. See [reports/sql_insights.md](reports/sql_insights.md) for the full breakdown.
 
 <p align="center">
   <img src="reports/figures/07_roc_curve.png" width="32%" alt="ROC Curve">
@@ -40,52 +41,53 @@ payment. Confirmed with chi-square testing (p < 0.001), not just eyeballing a ch
   <img src="reports/figures/09_feature_importance.png" width="32%" alt="Feature Importance">
 </p>
 
-## Architecture
+## How the pieces fit together
 
 ```mermaid
 flowchart LR
-    A[Raw CSV] --> B[Data Cleaning]
-    B --> C[Feature Engineering]
-    C --> D[EDA + Statistical Tests]
-    C --> E[SQL Analysis]
-    C --> F[Model Training<br/>SMOTE + GridSearchCV]
-    F --> G[Model Evaluation]
-    F --> H[(churn_model.joblib)]
-    H --> I[FastAPI service]
-    H --> J[Streamlit dashboard]
+    A[Raw data] --> B[Clean the data]
+    B --> C[Build features]
+    C --> D[Explore and test]
+    C --> E[SQL analysis]
+    C --> F[Train models]
+    F --> G[Evaluate models]
+    F --> H[(Saved model)]
+    H --> I[API]
+    H --> J[Dashboard]
     I --> K[Docker]
     J --> K
 ```
 
-## Stack
+## Tools used
 
-Python, Pandas, NumPy, SciPy, SQL (SQLite)
-scikit-learn, XGBoost, imbalanced-learn
-Matplotlib, Seaborn, Plotly
-FastAPI, Pydantic, Streamlit
-Docker, GitHub Actions, pytest
+- Python, Pandas, NumPy, SciPy
+- SQL (SQLite)
+- scikit-learn, XGBoost, imbalanced-learn
+- Matplotlib, Seaborn, Plotly
+- FastAPI, Pydantic, Streamlit
+- Docker, GitHub Actions, pytest
 
-## Project structure
+## Project layout
 
 ```
 customer-churn-prediction/
-├── api/                  FastAPI service (predict, predict/batch, health, metadata)
-├── dashboard/             Streamlit app (overview, live predict, model performance)
+├── api/                  the web API (predict, health check, etc.)
+├── dashboard/             the Streamlit dashboard
 ├── src/
-│   ├── data/               cleaning + SQL analysis
-│   ├── features/            feature engineering + preprocessing pipeline
-│   ├── models/              training (GridSearchCV) + evaluation
-│   └── visualization/       EDA + statistical tests
-├── notebooks/             EDA / feature engineering / modeling, executed with outputs
-├── tests/                 pytest suite (26 tests)
-├── reports/                generated metrics, figures, SQL insights
-├── models/                 saved model + preprocessing pipeline
-├── data/                   raw + processed data, SQLite db
+│   ├── data/               cleans data, runs SQL analysis
+│   ├── features/            builds features for the model
+│   ├── models/              trains and evaluates models
+│   └── visualization/       charts and statistical tests
+├── notebooks/             notebooks showing the analysis step by step
+├── tests/                 automated tests (26 total)
+├── reports/                generated charts, metrics, and summaries
+├── models/                 the saved, trained model
+├── data/                   raw and cleaned data
 ├── Dockerfile, docker-compose.yml
 └── .github/workflows/ci.yml
 ```
 
-## Quickstart
+## Getting started
 
 ```bash
 git clone https://github.com/NihalKhatwani/customer-churn-prediction.git && cd customer-churn-prediction
@@ -93,7 +95,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Run the pipeline (reproduces everything in `reports/` and `models/`):
+Run the full pipeline. This rebuilds everything in `reports/` and `models/`:
 
 ```bash
 python -m src.data.make_dataset
@@ -110,12 +112,14 @@ Run the tests:
 pytest
 ```
 
-Serve the model:
+Start the API:
 
 ```bash
 uvicorn api.main:app --reload --port 8000
 # docs at http://localhost:8000/docs
 ```
+
+Try a prediction:
 
 ```bash
 curl -X POST http://localhost:8000/predict \
@@ -128,55 +132,52 @@ curl -X POST http://localhost:8000/predict \
     "PaperlessBilling": "Yes", "PaymentMethod": "Electronic check",
     "MonthlyCharges": 85.4, "TotalCharges": 427.0
   }'
-# -> {"churn_probability":0.8276,"churn_prediction":"Yes","risk_tier":"High", ...}
+# returns something like: {"churn_probability":0.8276,"churn_prediction":"Yes","risk_tier":"High"}
 ```
 
-Launch the dashboard:
+Start the dashboard:
 
 ```bash
 streamlit run dashboard/app.py
 ```
 
-Or run both with Docker Compose (API on 8000, dashboard on 8501):
+Or run both the API and dashboard together with Docker:
 
 ```bash
 docker compose up --build
 ```
 
-## How it works
+## The steps, in order
 
-1. **Cleaning** — coerce `TotalCharges` to numeric (11 blank values from zero-tenure customers),
-   normalize categorical encodings, drop 22 duplicate rows.
+1. **Clean the data.** Fix missing values, standardize labels, remove duplicates.
    [src/data/make_dataset.py](src/data/make_dataset.py)
-2. **EDA + hypothesis testing** — class balance, distributions, and chi-square/Welch's t-tests
-   against the churn target. 14 of 16 categorical features and all 3 numeric features come out
-   significant at p < 0.05. [src/visualization/visualize.py](src/visualization/visualize.py),
+2. **Explore the data and test it statistically.** Look at churn rates by group, then confirm
+   which patterns are actually significant and not just noise.
+   [src/visualization/visualize.py](src/visualization/visualize.py),
    [notebooks/01_eda.ipynb](notebooks/01_eda.ipynb)
-3. **SQL analysis** — the cleaned data loaded into SQLite, business questions answered in plain
-   SQL (window functions, CTEs, aggregations).
-   [src/data/sql_analysis.py](src/data/sql_analysis.py)
-4. **Feature engineering** — seven derived features (tenure buckets, active-service count,
-   contract risk score, etc.) plus a `ColumnTransformer` shared identically across training,
-   the API, and the dashboard so there's no train/serve mismatch.
+3. **Analyze with SQL.** Load the data into a small database and answer business questions
+   using SQL queries. [src/data/sql_analysis.py](src/data/sql_analysis.py)
+4. **Build features.** Create new, more useful columns from the raw data (like a tenure group or
+   a count of active services) and prepare everything for the model.
    [src/features/build_features.py](src/features/build_features.py)
-5. **Modeling** — Logistic Regression, Random Forest, and XGBoost tuned with GridSearchCV
-   (5-fold, ROC-AUC), with SMOTE applied inside each CV fold to avoid leaking oversampled data
-   into the validation split. [src/models/train_model.py](src/models/train_model.py)
-6. **Evaluation** — confusion matrix, ROC/PR curves, classification report, feature importance.
+5. **Train models.** Compare three different model types and tune each one to find its best
+   settings, using cross validation so results aren't just luck.
+   [src/models/train_model.py](src/models/train_model.py)
+6. **Evaluate the model.** Check accuracy, precision, recall, and which features matter most.
    [src/models/evaluate_model.py](src/models/evaluate_model.py)
-7. **Deployment** — the fitted pipeline served through FastAPI (single + batch prediction,
-   health/metadata endpoints) and a Streamlit dashboard, both containerized and tested in CI on
-   every push.
+7. **Deploy it.** Serve the model through a web API and a dashboard, both packaged with Docker
+   and tested automatically whenever code changes.
 
-## Dataset
+## About the data
 
-[IBM Telco Customer Churn](https://github.com/IBM/telco-customer-churn-on-icp4d) — 7,043
-customers, 21 attributes. A standard public benchmark for churn modeling.
+The data comes from [IBM's Telco Customer Churn dataset](https://github.com/IBM/telco-customer-churn-on-icp4d),
+a public dataset with 7,043 customers and 21 attributes. It's a well known dataset commonly used
+to practice and demonstrate churn prediction.
 
 ## Testing
 
-26 tests covering data cleaning, feature engineering, model quality (regression guard on
-ROC-AUC), and the API's contract and behavior.
+There are 26 automated tests covering data cleaning, feature building, model quality, and the
+API's behavior.
 
 ```bash
 pytest -v
@@ -184,4 +185,4 @@ pytest -v
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
