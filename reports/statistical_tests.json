@@ -1,0 +1,142 @@
+{
+  "chi_square_tests": [
+    {
+      "feature": "Contract",
+      "chi2_statistic": 1179.803,
+      "p_value": 6.442284610021267e-257,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "OnlineSecurity",
+      "chi2_statistic": 846.782,
+      "p_value": 1.329226523787891e-184,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "TechSupport",
+      "chi2_statistic": 824.997,
+      "p_value": 7.1468577158283216e-180,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "InternetService",
+      "chi2_statistic": 732.057,
+      "p_value": 1.0857790034735195e-159,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "PaymentMethod",
+      "chi2_statistic": 643.923,
+      "p_value": 3.026775257087506e-139,
+      "degrees_of_freedom": 3,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "OnlineBackup",
+      "chi2_statistic": 598.97,
+      "p_value": 8.614898409283198e-131,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "DeviceProtection",
+      "chi2_statistic": 555.884,
+      "p_value": 1.9555513236078665e-121,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "StreamingMovies",
+      "chi2_statistic": 375.601,
+      "p_value": 2.750289622934079e-82,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "StreamingTV",
+      "chi2_statistic": 374.226,
+      "p_value": 5.469454144000632e-82,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "PaperlessBilling",
+      "chi2_statistic": 254.962,
+      "p_value": 2.1518977990247174e-57,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "Dependents",
+      "chi2_statistic": 186.786,
+      "p_value": 1.599567669407213e-42,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "SeniorCitizen",
+      "chi2_statistic": 160.47,
+      "p_value": 8.934159012714662e-37,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "Partner",
+      "chi2_statistic": 155.48,
+      "p_value": 1.0999615978939857e-35,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "MultipleLines",
+      "chi2_statistic": 12.362,
+      "p_value": 0.0020685599531309134,
+      "degrees_of_freedom": 2,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "PhoneService",
+      "chi2_statistic": 0.816,
+      "p_value": 0.3664940064978197,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": false
+    },
+    {
+      "feature": "gender",
+      "chi2_statistic": 0.5,
+      "p_value": 0.4794615390898278,
+      "degrees_of_freedom": 1,
+      "significant_at_0.05": false
+    }
+  ],
+  "t_tests": [
+    {
+      "feature": "tenure",
+      "t_statistic": -34.669,
+      "p_value": 1.4676429262285785e-230,
+      "mean_churned": 18.09,
+      "mean_retained": 37.64,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "TotalCharges",
+      "t_statistic": -18.562,
+      "p_value": 7.60081949652344e-74,
+      "mean_churned": 1541.38,
+      "mean_retained": 2554.81,
+      "significant_at_0.05": true
+    },
+    {
+      "feature": "MonthlyCharges",
+      "t_statistic": 18.517,
+      "p_value": 1.3728045525066672e-73,
+      "mean_churned": 74.6,
+      "mean_retained": 61.34,
+      "significant_at_0.05": true
+    }
+  ]
+}

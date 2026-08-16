@@ -1,0 +1,16 @@
+feature,importance
+num__is_month_to_month,0.2682123
+cat__PaymentMethod_Electronic check,0.083818585
+cat__OnlineSecurity_No,0.078157954
+cat__TechSupport_No,0.046324205
+cat__PaperlessBilling_No,0.039074723
+num__charge_per_service,0.0385979
+cat__Dependents_No,0.03815473
+cat__InternetService_Fiber optic,0.03457063
+cat__tenure_bucket_New(0-12mo),0.030575454
+num__contract_risk_score,0.023704072
+cat__OnlineBackup_No,0.021434197
+cat__MultipleLines_No,0.019665292
+cat__StreamingMovies_No,0.019661356
+cat__StreamingMovies_Yes,0.019210907
+cat__gender_Female,0.018950537

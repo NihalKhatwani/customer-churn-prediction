@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Data / model artifacts are intentionally tracked for this portfolio project
+# (small demo dataset) so recruiters can inspect real outputs without running
+# the pipeline first. Uncomment below if you'd rather keep the repo code-only:
+# data/raw/*.csv
+# data/processed/*.csv
+# data/processed/*.db
+# models/*.joblib
+
+# Streamlit
+.streamlit/secrets.toml
